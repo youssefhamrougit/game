@@ -19,7 +19,7 @@ int main() {
     const char* walkNames[4][4] = {
         { "up_0", "up_1", "up_2", "up_3" },
         { "down_0", "down_1", "down_2", "down_3" },
-        { "left_0", "left_1", "left2", "left3" },
+        { "left_0", "left_1", "left_2", "left_3" },
         { "right_0", "right_1", "right_2" , "right_3" }
     };
 
