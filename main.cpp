@@ -7,7 +7,7 @@ enum direction  { UP , DOWN , LEFT , RIGHT };
 int main() {
     // Game window
     InitWindow(960, 450, "Down Below");
-    SetTargetFPS(60);k
+    SetTargetFPS(60);
 
     // Player position and speed
     float x = 480, y = 270, speed = 200;
