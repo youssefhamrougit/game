@@ -13,12 +13,21 @@ int main() {
     float x = 480, y = 270, speed = 200;
     direction dir = DOWN;
 
+    //attack 
+    const int attack_frames = 5; 
+    Texture2D attackLeft[attack_frames] ; 
+    Texture2D attackRight[attack_frames] ; 
+    bool attack = false ; 
+    int attackFrame = 0 ; 
+    float attackTimer = 0.0f ; 
+    float attackFrameTime = 0.08f ; 
+
     // Sprite filenames
     const char* names[] = { "up", "down", "left", "right" };
 
     const char* walkNames[4][4] = {
         { "up_0", "up_1", "up_2", "up_3" },
-        { "down_0", "down_1", "down_2", "down_3" },
+        { "down_0", "down_1", "down_2", "walk/down_3" },
         { "left_0", "left_1", "left_2", "left_3" },
         { "right_0", "right_1", "right_2" , "right_3" }
     };
@@ -46,6 +55,11 @@ int main() {
             );
         }
     }
+    // load attacking animations 
+    for (int f = 0; f < ATTACK_FRAMES; f++) {
+    attackLeft[f]  = LoadTexture(TextFormat("assets/sprites/player/attack_left/attack_left/attack_%d.png", f));
+    attackRight[f] = LoadTexture(TextFormat("assets/sprites/player/attack_left/attack_right/attack_%d.png", f));
+}
 
     // Animation variables
     int frame = 0;
@@ -61,6 +75,7 @@ int main() {
         float dy = 0;
 
         // Read movement input
+        if (!attack){
         if (IsKeyDown(KEY_W)) {
             dy -= 1;
         }
@@ -76,6 +91,7 @@ int main() {
         if (IsKeyDown(KEY_D)) {
             dx += 1;
         }
+    }
 
         moving = (dx != 0 || dy != 0);
 
@@ -127,6 +143,25 @@ int main() {
             frame = 0;
             animTimer = 0;
         }
+
+        // attack 
+        if (IsKeyPressed(KEY_F) && !attack) { 
+            attack = true ; 
+            attackFrame = 0 ; 
+            attackTimer = 0.0f ; 
+        }
+        if (attack) { 
+            attackTimer += dt ; 
+            if (attackTimer >= attackFrameTime ){ 
+                attackFrame++ ; 
+                attackTimer = 0.0f ; 
+                if (attackFrame >= ATTACK_FRAMES){ 
+                    attack = false ; 
+                    attackFrame = 0 ; 
+                }
+            }
+        }
+
 
         // Draw
         BeginDrawing();
