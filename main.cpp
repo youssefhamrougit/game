@@ -27,7 +27,7 @@ int main() {
 
     const char* walkNames[4][4] = {
         { "up_0", "up_1", "up_2", "up_3" },
-        { "down_0", "down_1", "down_2", "walk/down_3" },
+        { "down_0", "down_1", "down_2", "down_3" },
         { "left_0", "left_1", "left_2", "left_3" },
         { "right_0", "right_1", "right_2" , "right_3" }
     };
@@ -56,9 +56,9 @@ int main() {
         }
     }
     // load attacking animations 
-    for (int f = 0; f < ATTACK_FRAMES; f++) {
+    for (int f = 0; f < attack_frames; f++) {
     attackLeft[f]  = LoadTexture(TextFormat("assets/sprites/player/attack_left/attack_left/attack_%d.png", f));
-    attackRight[f] = LoadTexture(TextFormat("assets/sprites/player/attack_left/attack_right/attack_%d.png", f));
+    attackRight[f] = LoadTexture(TextFormat("assets/sprites/player/attack_right/attack_right/attack_%d.png", f));
 }
 
     // Animation variables
@@ -155,7 +155,7 @@ int main() {
             if (attackTimer >= attackFrameTime ){ 
                 attackFrame++ ; 
                 attackTimer = 0.0f ; 
-                if (attackFrame >= ATTACK_FRAMES){ 
+                if (attackFrame >= attack_frames){ 
                     attack = false ; 
                     attackFrame = 0 ; 
                 }
