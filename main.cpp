@@ -165,21 +165,45 @@ int main() {
 
         // Draw
         BeginDrawing();
-        ClearBackground(BLACK);
+        ClearBackground(WHITE);
 
         if (attack){ 
             if (dir == LEFT){ 
-                DrawTexture(attackLeft[attackFrame] , (int)x , (int)y , WHITE) ; 
+                DrawTexturePro(attackLeft[attackFrame] ,
+                    { 0 , 0 , (float)attackLeft[attackFrame].width , (float)attackLeft[attackFrame].height } ,
+                    { x-2 , y-2 , (float)idle[LEFT].width * 2.7f, (float)idle[LEFT].height * 2.7f } ,
+                    { 0 , 0 } ,
+                    0.0f ,
+                    WHITE  ) ; 
             } else if (dir == RIGHT){ 
-                DrawTexture(attackRight[attackFrame] , (int)x , (int)y , WHITE) ;
+                DrawTexturePro(attackRight[attackFrame] ,
+                    { 0 , 0 , (float)attackRight[attackFrame].width , (float)attackRight[attackFrame].height } ,
+                    { x-2 , y-2 , (float)idle[RIGHT].width * 2.7f, (float)idle[RIGHT].height * 2.7f } , 
+                    { 0 , 0 } ,
+                    0.0f ,
+                    WHITE  ) ; 
             } else { 
-                DrawTexture(idle[dir] , (int)x , (int)y , WHITE) ; 
+                DrawTexturePro(idle[dir] , { 0 , 0 , (float)idle[dir].width , (float)idle[dir].height } ,
+                { x-2 , y-2 , (float)idle[dir].width * 2.7f , (float)idle[dir].height * 2.7f } , 
+                { 0 , 0 } , 
+                0.0f ,
+                WHITE) ; 
             }
         } else if (moving) {
-            DrawTexture(walk[dir][frame], (int)x, (int)y, WHITE);
+            DrawTexturePro(walk[dir][frame], 
+                { 0 , 0 , (float)walk[dir][frame].width , (float)walk[dir][frame].height } ,
+                { x , y , (float)walk[dir][frame].width * 2.0f , (float)walk[dir][frame].height * 2.0f } ,
+                { 0 , 0 } , 
+                0.0f ,
+                WHITE);
         }
         else {
-            DrawTexture(idle[dir], (int)x, (int)y, WHITE) ; 
+            DrawTexturePro(idle[dir], 
+                { 0 , 0 , (float)idle[dir].width , (float)idle[dir].height } , 
+                { x , y , (float)idle[dir].width * 2.0f , (float)idle[dir].height * 2.0f } ,
+                { 0 , 0 } , 
+                0.0f , 
+                WHITE) ; 
         }
 
         EndDrawing();
