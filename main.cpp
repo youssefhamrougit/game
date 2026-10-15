@@ -167,11 +167,19 @@ int main() {
         BeginDrawing();
         ClearBackground(BLACK);
 
-        if (moving) {
+        if (attack){ 
+            if (dir == LEFT){ 
+                DrawTexture(attackLeft[attackFrame] , (int)x , (int)y , WHITE) ; 
+            } else if (dir == RIGHT){ 
+                DrawTexture(attackRight[attackFrame] , (int)x , (int)y , WHITE) ;
+            } else { 
+                DrawTexture(idle[dir] , (int)x , (int)y , WHITE) ; 
+            }
+        } else if (moving) {
             DrawTexture(walk[dir][frame], (int)x, (int)y, WHITE);
         }
         else {
-            DrawTexture(idle[dir], (int)x, (int)y, WHITE);
+            DrawTexture(idle[dir], (int)x, (int)y, WHITE) ; 
         }
 
         EndDrawing();
@@ -184,6 +192,10 @@ int main() {
         for (int f = 0; f < frameCount[d]; f++) {
             UnloadTexture(walk[d][f]);
         }
+    }
+    for (int f=0 ; f < attack_frames ; f++){ 
+        UnloadTexture(attackLeft[f]) ; 
+        UnloadTexture(attackRight[f]) ; 
     }
 
     CloseWindow();
