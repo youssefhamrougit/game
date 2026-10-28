@@ -1,0 +1,93 @@
+
+name: Build The Last Castle for Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+      - name: Checkout game
+        uses: actions/checkout@v5
+
+      - name: Install CLANG64 tools
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANG64
+          update: true
+          install: >-
+            git
+            make
+            tar
+            mingw-w64-clang-x86_64-clang
+            mingw-w64-clang-x86_64-cmake
+            mingw-w64-clang-x86_64-make
+
+      - name: Download raylib source
+        run: |
+          git clone --depth 1 https://github.com/raysan5/raylib.git raylib
+
+      - name: Build static raylib
+        run: |
+          cd raylib/src
+          make PLATFORM=PLATFORM_DESKTOP CC=clang RAYLIB_LIBTYPE=STATIC
+          test -f libraylib.a
+
+      - name: Compile The Last Castle
+        run: |
+          mkdir -p dist
+
+          clang++ main.cpp \
+            -Iraylib/src \
+            raylib/src/libraylib.a \
+            -o dist/TheLastCastle.exe \
+            -lopengl32 \
+            -lgdi32 \
+            -lwinmm
+
+          test -f dist/TheLastCastle.exe
+
+      - name: Package game and assets
+        run: |
+          git archive HEAD | tar -x -C dist
+
+          # Preserve the compiled executable
+          cp dist/TheLastCastle.exe dist/TheLastCastle.exe.tmp
+          mv dist/TheLastCastle.exe.tmp dist/TheLastCastle.exe
+
+          # Remove development-only files
+          rm -rf dist/.github dist/.git
+
+          # Collect required CLANG64 runtime DLLs
+          ldd dist/TheLastCastle.exe > /tmp/dependencies.txt || true
+
+          while read -r dll; do
+            if [ -f "$dll" ]; then
+              cp -n "$dll" dist/
+            fi
+          done < <(
+            ldd dist/TheLastCastle.exe 2>/dev/null |
+            awk '/\/clang64\/bin\/.*\.dll/ {print $3}'
+          )
+
+          tar -a -c -f TheLastCastle-Windows.zip -C dist .
+
+      - name: Upload The Last Castle
+        uses: actions/upload-artifact@v4
+        with:
+          name: TheLastCastle-Windows
+          path: TheLastCastle-Windows.zip
+          if-no-files-found: error
+          retention-days: 14
