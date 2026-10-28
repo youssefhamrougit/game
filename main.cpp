@@ -6,7 +6,7 @@ enum direction { UP, DOWN, LEFT, RIGHT };
 
 int main() {
     // Game window
-    InitWindow(960, 450, "Down Below");
+    InitWindow(960, 450, "The Last Castle");
     SetTargetFPS(60);
 
     // Player position and speed
